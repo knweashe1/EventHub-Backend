@@ -1,6 +1,10 @@
-node_modules
+node_modules/
 .env
-.DS_Store
+
+# Vim files
 *.swp
+*.swo
+*.swn
+*.swm
+*.old
 *~
-*.un~
