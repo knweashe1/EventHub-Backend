@@ -8,11 +8,13 @@ EventHub is a simple RESTful backend API built with Node.js and Express that all
 
 ```bash
 npm install
+```
 
 ### Start the server
 
 ```bash
 node server.js
+```
 
 The API will be available at:
 http://localhost:3000
@@ -23,7 +25,6 @@ http://localhost:3000
 
 POST /events
 
-```md
 Request Body
 
 ```json
@@ -34,6 +35,7 @@ Request Body
   "capacity": 6,
   "instagramUsername": "host_ig"
 }
+```
 
 capacity is optional. If omitted, the event has no attendance limit.
 
@@ -50,6 +52,7 @@ Success Response (201 Created)
   "attendees": ["host_ig"],
   "currentAttendees": 1
 }
+```
 
 ## List / Search Events
 
@@ -83,13 +86,13 @@ Responses
 
 POST /events/:id/join
 
-```md
 Request Body
 
 ```json
 {
   "instagramUsername": "guest_ig"
 }
+```
 
 Behavior
 Adds the user to the event if it exists
@@ -108,7 +111,6 @@ PUT /events/:id
 
 Updates one or more fields of an existing event. At least one updatable field must be provided.
 
-```md
 Request Body (any subset allowed)
 
 ```json
@@ -119,6 +121,7 @@ Request Body (any subset allowed)
   "capacity": 8,
   "instagramUsername": "new_host_ig"
 }
+```
 
 Update Rules
 activity and location cannot be empty
@@ -137,7 +140,6 @@ Responses
 
 DELETE /events/:id
 
-```md
 Responses
 204 No Content on successful deletion
 404 Not Found if the event does not exist
