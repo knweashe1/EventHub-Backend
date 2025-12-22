@@ -42,6 +42,40 @@ app.post('/events', (req, res) => {
   res.status(201).json(newEvent);
 });
 
+// POST /events/:id/join
+app.post('/events/:id/join', (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ error: 'Invalid event id' });
+  }
+
+  const event = events.find(e => e.id === id);
+  if (!event) {
+    return res.status(404).json({ error: 'Event not found' });
+  }
+
+  const { instagramUsername } = req.body;
+  if (!instagramUsername) {
+    return res.status(400).json({ error: 'instagramUsername is required to join' });
+  }
+
+  const alreadyJoined = event.attendees.some(
+    ig => ig.toLowerCase() === instagramUsername.toLowerCase()
+  );
+  if (alreadyJoined) {
+    return res.status(409).json({ error: 'User already joined this event' });
+  }
+
+  if (event.capacity !== null && event.attendees.length >= event.capacity) {
+    return res.status(409).json({ error: 'Event is full' });
+  }
+
+  event.attendees.push(instagramUsername);
+  event.currentAttendees = event.attendees.length;
+
+  res.json(event);
+});
+
 // GET /events - list/search
 app.get('/events', (req, res) => {
   const { activity, location, date } = req.query;
@@ -80,6 +114,59 @@ app.get('/events/:id', (req, res) => {
   }
 
   res.json(event);
+});
+
+app.put('/events/:id', (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ error: 'Invalid event id' });
+  }
+
+  const event = events.find(e => e.id === id);
+  if (!event) {
+    return res.status(404).json({ error: 'Event not found' });
+  }
+
+  const { activity, date, location, capacity, instagramUsername } = req.body;
+
+  if (activity !== undefined) event.activity = activity;
+  if (date !== undefined) event.date = new Date(date).toISOString();
+  if (location !== undefined) event.location = location;
+
+  if (capacity !== undefined) {
+    if (capacity === null) {
+      event.capacity = null;
+    } else {
+      const capNum = Number(capacity);
+      if (!Number.isInteger(capNum) || capNum < event.attendees.length) {
+        return res.status(400).json({ error: 'Invalid capacity value' });
+      }
+      event.capacity = capNum;
+    }
+  }
+
+  if (instagramUsername !== undefined) {
+    event.instagramUsername = instagramUsername;
+  }
+
+  event.currentAttendees = event.attendees.length;
+  res.json(event);
+});
+
+// DELETE /events/:id
+app.delete('/events/:id', (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) {
+    return res.status(400).json({ error: 'Invalid event id' });
+  }
+
+  const index = events.findIndex(e => e.id === id);
+  if (index === -1) {
+    return res.status(404).json({ error: 'Event not found' });
+  }
+
+  events.splice(index, 1);
+  res.status(204).send();
 });
 
 module.exports = app;
