@@ -140,50 +140,31 @@ app.get('/events', async (req, res) => {
   try {
     const activity = req.query.activity;
     const location = req.query.location;
-    const date = req.query.date;
 
-    const events = await prisma.event.findMany();
-
-    let filteredEvents = events.slice();
+    let where = {};
 
     if (activity) {
-      const activityLower = activity.toLowerCase();
-      filteredEvents = filteredEvents.filter(event => {
-        return event.activity.toLowerCase().includes(activityLower);
-      });
+      where.activity = {
+        contains: activity,
+        mode: 'insensitive'
+      };
     }
 
     if (location) {
-      const locationLower = location.toLowerCase();
-      filteredEvents = filteredEvents.filter(event => {
-        return event.location.toLowerCase().includes(locationLower);
-      });
+      where.location = {
+        contains: location,
+        mode: 'insensitive'
+      };
     }
 
-    if (date) {
-      filteredEvents = filteredEvents.filter(event => {
-        const eventDate = new Date(event.date);
-
-        if (isNaN(eventDate.getTime())) {
-          return false;
-        }
-
-        const year = eventDate.getUTCFullYear();
-        const month = String(eventDate.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(eventDate.getUTCDate()).padStart(2, '0');
-
-        const eventDateString = year + '-' + month + '-' + day;
-        return eventDateString === date;
-      });
-    }
-
-    filteredEvents.sort((a, b) => {
-      const timeA = new Date(a.date).getTime();
-      const timeB = new Date(b.date).getTime();
-      return timeA - timeB;
+    const events = await prisma.event.findMany({
+      where: where,
+      orderBy: {
+        date: 'asc'
+      }
     });
 
-    const result = filteredEvents.map(event => {
+    const result = events.map(event => {
       return {
         ...event,
         currentAttendees: event.attendees.length
