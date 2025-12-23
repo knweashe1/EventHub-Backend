@@ -24,15 +24,7 @@ You need a local PostgreSQL server running. During installation, you will set a 
 
 Create and name database for the project using pgAdmin or psql.
 
-### Environment variables
-
-Database configuration is handled using environment variables.
-
-Create a file named .env in the project root. You can use the example file below as a reference.
-
-Example .env.example file:
-
-DATABASE_URL="postgresql://postgres:<password>@localhost:5432/<DBname>?schema=public"
+Modify the .env file in the project root. You can use .env.example as a reference.
 
 Replace password with your local PostgreSQL password and DBname with database name.
 
@@ -79,9 +71,11 @@ capacity is optional. If omitted, the event has no attendance limit.
 ```
 Responses:
 
-201 Event created successfully and returned in the response body.
-400 Required fields are missing, the date is invalid, or capacity is not a valid positive integer.
-500 An unexpected server or database error occurs.
+(201) Event created successfully and returned in the response body.
+
+(400) Required fields are missing, the date is invalid, or capacity is not a valid positive integer.
+
+(500) An unexpected server or database error occurs.
 
 ## List / Search Events
 
@@ -90,19 +84,25 @@ GET /events
 Optional Query Parameters
 
 activity: case-insensitive substring match
+
 location: case-insensitive substring match
+
 date: YYYY-MM-DD (matches events on that day)
 
 Examples:
 
 GET /events
+
 GET /events?activity=basket
+
 GET /events?location=campus
+
 GET /events?date=2025-01-10
+
 GET /events?activity=basket&date=2025-01-10
 
 Response:
-200 With a list of events sorted by date (earliest first).
+(200) with a list of events sorted by date (earliest first).
 
 ## Get a Single Event
 
@@ -112,8 +112,9 @@ The ID must be a numeric event ID.
 
 Responses:
 
-200 The event exists
-404 The event does not exist
+(200) The event exists
+
+(404) The event does not exist
 
 ## Join an Event
 
@@ -130,15 +131,20 @@ Request Body:
 Behavior:
 
 Adds the user to the event if it exists
+
 Prevents duplicate joins
+
 Enforces capacity limits if set
 
 Responses:
 
-200 with the updated event
-400 Required data is missing
-404 The event does not exist
-409 The event is full or the user already joined
+(200) with the updated event
+
+(400) Required data is missing
+
+(404) The event does not exist
+
+(409) The event is full or the user already joined
 
 ## Update an Event
 
@@ -161,17 +167,24 @@ Request Body (one or more fields to update):
 Update Rules:
 
 activity and location cannot be empty
+
 date must be a valid ISO 8601 date string
+
 capacity must be a positive integer or null
+
 capacity cannot be less than the current number of attendees
+
 instagramUsername cannot be empty
-If attendees exist, currentAttendees is automatically synchronized
+
+if attendees exist, currentAttendees is automatically synchronized
 
 Responses:
 
-200 The updated event
-400 Invalid input or no fields provided
-404 The event does not exist
+(200) The updated event
+
+(400) Invalid input or no fields provided
+
+(404) The event does not exist
 
 ## Delete an Event
 
@@ -179,8 +192,9 @@ DELETE /events/:id
 
 Responses:
 
-204 No Content on successful deletion
-404 The event does not exist
+(204) No Content on successful deletion
+
+(404) The event does not exist
 
 ## Testing
 
