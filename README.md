@@ -8,6 +8,7 @@ EventHub is a simple RESTful backend API built with Node.js and Express that all
 - Express
 - PostgreSQL
 - Prisma ORM(V5)
+- Docker
 
 ## Running the API Locally
 
@@ -34,7 +35,34 @@ Replace password with your local PostgreSQL password and DBname with database na
 node server.js
 ```
 
-The API will be available at:
+## Docker Setup
+
+This project can be run using Docker and Docker Compose, which starts both
+the Node.js API and a PostgreSQL database in containers.
+
+### Prerequisites
+- Docker installed and running
+
+### Start the API and database
+
+```bash
+docker compose up --build
+```
+
+PostgreSQL runs in a separate container and data is persisted using a Docker volume.
+
+### Database migrations
+
+Prisma migrations are included in the repository and are automatically applied
+when the API container starts using:
+
+```bash
+npx prisma migrate deploy
+```
+
+No manual database setup is required when using Docker.
+
+For both Docker and running locally, the API will be available at:
 http://localhost:3000
 
 ## API Endpoints
