@@ -7,7 +7,7 @@ EventHub is a simple RESTful backend API built with Node.js and Express that all
 - Node.js
 - Express
 - PostgreSQL
-- Prisma ORM
+- Prisma ORM(V5)
 
 ## Running the API Locally
 

@@ -2,7 +2,7 @@
   "name": "event-planner-api-node",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +11,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1"
+    "@prisma/client": "^5.22.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "prisma": "^5.22.0"
   }
 }

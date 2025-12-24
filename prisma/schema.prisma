@@ -5,22 +5,23 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Event {
-  id               Int      @id @default(autoincrement())
-  activity         String
-  date             DateTime
-  location         String
-  capacity         Int?     
-  hostInstagram    String
-  attendees        String[] @default([])
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  activity      String
+  date          DateTime
+  location      String
+  capacity      Int?
+  hostInstagram String
+  attendees     String[] @default([])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
+

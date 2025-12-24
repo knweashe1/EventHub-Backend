@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16
+    container_name: eventhub_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: eventhub
+    ports:
+      - "5432:5432"
+    volumes:
+      - eventhub_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: eventhub_api
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/eventhub?schema=public
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+volumes:
+  eventhub_data:
